@@ -12,9 +12,6 @@ env:
 jobs:
   build-base:
     runs-on: ubuntu-latest
-    #
-    # do not run on forks
-    #
     if: github.repository_owner == 'CoTester-ai'
     steps:
       - name: Check Out Repo
