@@ -15,7 +15,7 @@ jobs:
     #
     # do not run on forks
     #
-    if: github.repository_owner == 'cotester-ai'
+    if: github.repository_owner == 'CoTester-ai'
     steps:
       - name: Check Out Repo
         uses: actions/checkout@v2
