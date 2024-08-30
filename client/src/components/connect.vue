@@ -175,8 +175,7 @@ export default class extends Vue {
         icon: 'error',
       })
     } else {
-      this.$accessor.login({ displayname, password })
-      window.$log.info('login request')
+      this.attemptConnecting(displayname, password)
     }
   }
 
@@ -201,12 +200,13 @@ export default class extends Vue {
         this.attemptConnecting(this.$accessor.displayname, this.$accessor.password);
       }, this.$accessor.connectingRetryTimeout);
     } else {
-      window.$log.warn('Failed to enter connecting state after multiple attempts');
+      window.$log.error(new Error('Failed to enter connecting state after multiple attempts'));
       this.$swal({
         title: this.$t('connect.error') as string,
         text: this.$t('connect.connecting_error') as string,
         icon: 'error',
       });
+      this.$accessor.resetConnectingAttempts(); // Reset attempts after showing error
     }
   }
 

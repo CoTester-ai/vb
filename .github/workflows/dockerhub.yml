@@ -30,6 +30,10 @@ jobs:
           docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
         env:
           DOCKER_TAG: base
+      - name: echo image tag
+        run: echo "pushed image ${DOCKER_IMAGE}:${DOCKER_TAG}"
+        env:
+          DOCKER_TAG: base
 
   build:
     runs-on: ubuntu-latest
