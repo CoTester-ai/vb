@@ -151,6 +151,7 @@ export default class extends Vue {
   private autoLogin: string | null = new URL(location.href).searchParams.get('usr')
 
   mounted() {
+    window.$log.info('Mounted', this.autoPassword, this.autoLogin);
     // auto-password fill
     if (this.autoPassword !== null) {
       this.$accessor.setPassword(this.autoPassword)
