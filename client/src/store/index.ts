@@ -31,6 +31,14 @@ export const mutations = mutationTree(state, {
     state.active = true
   },
 
+  setDisplayname(state, displayname: string) {
+    state.displayname = displayname
+  },
+
+  setPassword(state, password: string) {
+    state.password = password
+  },
+
   setLogin(state, { displayname, password }: { displayname: string; password: string }) {
     state.displayname = displayname
     state.password = password
@@ -105,9 +113,8 @@ export const actions = actionTree(
       }
     },
 
-    login(store, { displayname, password }: { displayname: string; password: string }) {
-      accessor.setLogin({ displayname, password })
-      $client.login(password, displayname)
+    login() {
+      $client.login(accessor.password, accessor.displayname)
     },
 
     logout() {

@@ -150,32 +150,27 @@ export default class extends Vue {
   private autoPassword: string | null = new URL(location.href).searchParams.get('pwd')
   private autoLogin: string | null = new URL(location.href).searchParams.get('usr')
 
-  private displayname: string = ''
-  private password: string = ''
-
   mounted() {
     // auto-password fill
-    let password = this.$accessor.password
     if (this.autoPassword !== null) {
+      this.$accessor.setPassword(this.autoPassword)
       this.removeUrlParam('pwd')
-      password = this.autoPassword
     }
 
     // auto-user fill
-    let displayname = this.$accessor.displayname
     if (this.autoLogin !== null) {
+      this.$accessor.setDisplayname(this.autoLogin)
       this.removeUrlParam('usr')
-      displayname = this.autoLogin
     }
 
-    if (displayname === '' || password === '') {
+    if (this.$accessor.displayname === '' || this.$accessor.password === '') {
       this.$swal({
         title: this.$t('connect.error') as string,
         text: this.$t('connect.empty_displayname') as string,
         icon: 'error',
       })
     } else {
-      this.attemptConnecting(displayname, password)
+      this.attemptConnecting()
     }
   }
 
@@ -183,10 +178,12 @@ export default class extends Vue {
     return this.$accessor.connecting
   }
 
-  attemptConnecting(displayname: string, password: string) {
-    this.$accessor.login({ displayname, password })
+  attemptConnecting() {
+    this.$accessor.login()
     window.$log.info('Login request sent')
-    this.checkConnectingState()
+    setTimeout(() => {
+      this.checkConnectingState()
+    }, 500)
   }
 
   checkConnectingState() {
@@ -197,7 +194,7 @@ export default class extends Vue {
       this.$accessor.incrementConnectingAttempts();
       window.$log.warn(`Failed to enter connecting state. Retrying... (Attempt ${this.$accessor.connectingAttempts})`);
       setTimeout(() => {
-        this.attemptConnecting(this.$accessor.displayname, this.$accessor.password);
+        this.attemptConnecting();
       }, this.$accessor.connectingRetryTimeout);
     } else {
       window.$log.error(new Error('Failed to enter connecting state after multiple attempts'));
@@ -229,29 +226,6 @@ export default class extends Vue {
       url = urlBase + (pars.length > 0 ? '?' + pars.join('&') : '')
       window.history.pushState('', document.title, url)
     }
-  }
-
-  login() {
-    let password = this.password
-    if (this.autoPassword !== null) {
-      password = this.autoPassword
-    }
-
-    if (this.displayname == '') {
-      this.$swal({
-        title: this.$t('connect.error') as string,
-        text: this.$t('connect.empty_displayname') as string,
-        icon: 'error',
-      })
-      return
-    }
-
-    this.$accessor.login({ displayname: this.displayname, password })
-    this.autoPassword = null
-  }
-
-  about() {
-    this.$accessor.client.toggleAbout()
   }
 }
 </script>
