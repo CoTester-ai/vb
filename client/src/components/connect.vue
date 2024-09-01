@@ -191,7 +191,7 @@ export default class extends Vue {
   }
 
   checkConnectingState() {
-    if (this.connecting && this.connected) {
+    if (this.connecting || this.connected) {
       this.$accessor.resetConnectingAttempts();
       window.$log.info('Successfully entered connecting state');
     } else if (this.$accessor.connectingAttempts < this.$accessor.maxConnectingAttempts) {
